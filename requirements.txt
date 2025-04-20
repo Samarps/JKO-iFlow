@@ -2,3 +2,5 @@ torch
 scipy
 torchdiffeq
 Pillow
+pyyaml
+matplotlib
