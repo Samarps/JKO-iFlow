@@ -142,6 +142,7 @@ class CNF(nn.Module):
         else:
             return predz, dlogpx, dJacnorm
 
+'''
 def get_config(style):
     if style == 'tree' or style == 'rose':
         config = Namespace(
@@ -149,6 +150,20 @@ def get_config(style):
         )
     else:
         raise ValueError(f'Unknown style {style}')
+    return config
+'''
+
+def get_config(style): # dynamically checks for the input styles, rather than hardcode
+    with open("input_styles.yaml", 'r') as f:
+        available_styles = [line.strip() for line in f.readlines() if line.strip()]
+
+    if style in available_styles:
+        config = Namespace(
+            hid_dims='128-128-128'
+        )
+    else:
+        raise ValueError(f"Unknown style '{style}'. Available styles: {available_styles}")
+    
     return config
 
 def default_CNF_structure(config):
@@ -549,7 +564,7 @@ if __name__ == '__main__':
                 self.CNF.load_state_dict(self_ls_prev[-1].CNF.state_dict())
                 print(f'############ Warm start from {block_id-1} parameter ############')
         if args_training.load_checkpoint and os.path.exists(filepath):
-            checkpt = torch.load(filepath)
+            checkpt = torch.load(filepath, weights_only=False)
             self.CNF.load_state_dict(checkpt['model'])
             args_training = checkpt['args']
             args_training.load_checkpoint = True
