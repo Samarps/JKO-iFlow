@@ -367,7 +367,7 @@ def load_prev_CNFs():
     for b in range(1, block_id):
         self_prev = Namespace()
         filepath = os.path.join(master_dir, f'{prefix}{b}.pth')
-        checkpoint = torch.load(filepath)
+        checkpoint = torch.load(filepath, weights_only=False)
         self_prev.CNF = default_CNF_structure(config = vfield_config)
         self_prev.CNF.load_state_dict(checkpoint['model'])
         self_prev.ls_args_CNF = checkpoint['ls_args_CNF']
